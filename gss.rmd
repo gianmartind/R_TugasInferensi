@@ -1,5 +1,6 @@
 ---
-title: "R Notebook"
+title: "Tugas Inferensi"
+author: "6181801015 - Gian Martin D.; 6181801041 - Yalvi Hidayat; 6181801077 - Bernadus Lukas"
 output: html_notebook
 ---
 
