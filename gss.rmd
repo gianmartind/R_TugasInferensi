@@ -4,6 +4,8 @@ author: "6181801015 - Gian Martin D.; 6181801044 - Yalvi Hidayat; 6181801077 - B
 output: html_notebook
 ---
 
+## Data
+General Social Survey (GSS) adalah data yang diperoleh dari survey pada orang dewasa di Amerika Serikat sejak tahun 1972. Data diperoleh dari masyarakat kontemporer Amerika guna memonitor dan menjelaskan perubahan tren pada opini, sikap, dan perilaku masyarakat.
 
 
 ```{r}
