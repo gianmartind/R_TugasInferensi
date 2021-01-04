@@ -4,9 +4,7 @@ author: "6181801015 - Gian Martin D.; 6181801044 - Yalvi Hidayat; 6181801077 - B
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
 ```{r}
 library(dplyr)
