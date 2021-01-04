@@ -8,6 +8,36 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
 ```{r}
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+
 data <- load("gss.Rdata")
+data <- data.frame(gss)
+data
+dataFinal <- na.omit(data)
+dataFinal
+na.omit(data$hispanic)
+
+
+col1 = na.omit(data$race)
+col2 = na.omit(data$degree)
+
+sample1 <- sample(col1, size=1000)
+sample2 <- sample(col2, size=1000)
+
+dataSample <- data.frame(sample1, sample2)
+
+ggplot(dataSample, aes(x = sample1, y = sample2))+
+  geom_point()
+
+race_degree <- data %>% 
+  group_by(race, degree) %>%
+  summarise(jumlah = n())
+
+ggplot(race_degree, aes(x=factor(race), y=jumlah, fill=factor(degree)))+
+  geom_col(position="stack")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  xlab("Race")
 ```
 
