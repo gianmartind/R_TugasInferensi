@@ -42,3 +42,11 @@ ggplot(race_degree, aes(x=factor(race), y=jumlah, fill=factor(degree)))+
   xlab("Race")
 ```
 
+**Pertanyaan 1** Buatlah plot yang membantu untuk melihat adakah hubungan antara ras dengan level pendidikan.
+```{r TUGAS 7}
+ggplot(data, aes(x=factor(race), fill=factor(degree)))+
+  geom_bar(position = "fill")+
+  xlab("ras")+
+  guides(fill=guide_legend("level of degree"))
+
+```
