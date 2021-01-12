@@ -5,8 +5,7 @@ output: html_notebook
 ---
 
 ## Data
-General Social Survey (GSS) adalah data yang diperoleh dari survey pada orang dewasa di Amerika Serikat sejak tahun 1972. Data diperoleh dari masyarakat kontemporer Amerika guna memonitor dan menjelaskan perubahan tren pada opini, sikap, dan perilaku masyarakat.
-
+General Social Survey (GSS) adalah data yang diperoleh dari survey pada orang dewasa di Amerika Serikat sejak tahun 1972. Data diperoleh dari masyarakat kontemporer Amerika guna memonitor dan menjelaskan perubahan tren pada opini, sikap, dan perilaku masyarakat. Karena data diambil secara acak dari populasi, maka dapat dilakukan inferensi
 
 ```{r}
 library(dplyr)
@@ -15,38 +14,90 @@ library(ggplot2)
 
 data <- load("gss.Rdata")
 data <- data.frame(gss)
-data
-dataFinal <- na.omit(data)
-dataFinal
-na.omit(data$hispanic)
+```
 
+**Pertanyaan 1** Apakah ada perbedaan proporsi untuk dua status pernikahan (`marital`) (Married dan Divorced) berdasarkan dua kelompok jenis pekerjaan (`wrkstat`) (Fulltime dan Parttime)
+H0: Tidak ada perbedaan proporsi.
+Ha: Terdapat perbedaan proporsi.
 
-col1 = na.omit(data$race)
-col2 = na.omit(data$degree)
-
-sample1 <- sample(col1, size=1000)
-sample2 <- sample(col2, size=1000)
-
-dataSample <- data.frame(sample1, sample2)
-
-ggplot(dataSample, aes(x = sample1, y = sample2))+
-  geom_point()
-
-race_degree <- data %>% 
-  group_by(race, degree) %>%
+##### Filter dataset berdasarkan `wrkstat` untuk "Working Fulltime" dan "Working Parttime", dan `marital` untuk "Married" dan "Divorced", lalu kelompokkan 
+```{r}
+marital_wrkstat <- data %>% 
+  filter((marital == "Married" | marital == "Divorced") & (wrkstat == "Working Fulltime" | wrkstat == "Working Parttime")) %>%
+  group_by(wrkstat, marital) %>%
   summarise(jumlah = n())
 
-ggplot(race_degree, aes(x=factor(race), y=jumlah, fill=factor(degree)))+
-  geom_col(position="stack")+
+marital_wrkstat <- na.omit(marital_wrkstat)
+marital_wrkstat
+```
+
+##### Buat boxplot untuk memvisualisasi
+```{r}
+ggplot(marital_wrkstat, aes(x=factor(wrkstat), y=jumlah, fill=factor(marital)))+
+  geom_col(position="fill")
+```
+Dari boxplot yang dibuat, terlihat ada perbedaan dimana proporsi bercerai untuk Fulltime lebih tinggi dibanding Parttime.
+
+##### Lakukan prop test pada hasil pengelompokan
+```{r}
+prop.test(c(604, 4213), c(3005, 16027), correct = TRUE)
+```
+Dari dari hasil prop test, didapatkan nilai p-value yang lebih kecil dari 0.05, sehingga alasan yang cukup kuat untuk menolak Ha. Sehingga dapat diterima Ha yang berarti terdapat perbedaan proporsi status pernikahan antara pekerja Fulltime dan Parttime.
+
+
+**Pertanyaan 2** Apakah ada hubungan tingkat pendidikan (`degree`) dengan jumlah anak (`childs`)
+H0: Tidak ada hubungan antara keduanya
+Ha: Terdapat hubungan antara keduanya
+
+##### Buat dataframe mengelompokan berdasarkan `degree` dan `childs` dan hitung jumlah masing-masing
+```{r}
+degree_childs <- data %>%
+  group_by(degree, childs) %>%
+  summarise(jumlah = n())
+
+degree_childs <- na.omit(degree_childs)
+degree_childs
+```
+
+##### Buat bar plot untuk melihat persebaran data
+```{r}
+ggplot(degree_childs, aes(x=factor(degree), y=jumlah, fill=factor(childs)))+
+  geom_col(position="dodge")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
-  xlab("Race")
+  xlab("Degree")
+```
+Dari boxplot, terlihat ada sedikit perbedaan dimana tingkat pendidikan yang lebih tinggi cenderung memiliki lebih sedikit anak.
+
+##### Lakukan uji chi squared untuk kolom `degree`dan `childs`
+```{r}
+chisq.test(data$degree, data$childs)
+```
+Dari hasil uji chi square, diperoleh nilai p-value = 2.2e-16. Karena p-value lebih kecil dari 0.05 maka dapat ditolak H0-nya dan menerima Ha.
+
+**Pertanyaan 3** Apakah ada hubungan antara ras (`race`) dan jumlah pendapatan (`income06`)
+H0: Terdapat hubungan antara ras dan pendapatan
+Ha: Tidak terdapat hubungan antara ras dan pendapatan
+
+##### Kelompokan data berdasarkan `race` dan `income06` dan hitung jumlah masing-masing kelompok
+```{r}
+race_income06 <- data %>%
+  group_by(race, income06) %>%
+  summarise(jumlah = n())
+
+race_income06 <- na.omit(race_income06)
+race_income06
 ```
 
-**Pertanyaan 1** Buatlah plot yang membantu untuk melihat adakah hubungan antara ras dengan level pendidikan.
-```{r TUGAS 7}
-ggplot(data, aes(x=factor(race), fill=factor(degree)))+
-  geom_bar(position = "fill")+
-  xlab("ras")+
-  guides(fill=guide_legend("level of degree"))
-
+##### Buat boxplot untuk visualisasi
+```{r}
+ggplot(race_income06, aes(x=factor(race), y=jumlah, fill=factor(income06)))+
+  geom_col(position="dodge")+
+  xlab("race")
 ```
+Dari boxplot yang dibuat, dapat terlihat bahwa ras "White" cenderung memiliki pendapatan yang lebih tinggi.
+
+##### Lakukan uji chi squared untuk `race` dan `income06`
+```{r}
+chisq.test(data$race, data$income06)
+```
+Karena nilai p-value yang lebih kecil dari 0.05. Maka tidak dapat diterima H0, sehingga diterima Ha.
