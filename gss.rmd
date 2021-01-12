@@ -1,11 +1,14 @@
 ---
 title: "Tugas Inferensi"
-author: "6181801015 - Gian Martin D.; 6181801044 - Yalvi Hidayat; 6181801077 - Bernadus Lukas"
-output: html_notebook
+author: 6181801015 - Gian Martin D.; 6181801044 - Yalvi Hidayat; 6181801077 - Bernadus
+  Lukas
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Data
-General Social Survey (GSS) adalah data yang diperoleh dari survey pada orang dewasa di Amerika Serikat sejak tahun 1972. Data diperoleh dari masyarakat kontemporer Amerika guna memonitor dan menjelaskan perubahan tren pada opini, sikap, dan perilaku masyarakat. Karena data diambil secara acak dari populasi, maka dapat dilakukan inferensi
+General Social Survey (GSS) adalah data yang diperoleh dari survey pada orang dewasa di Amerika Serikat sejak tahun 1972. Data diperoleh dari masyarakat kontemporer Amerika guna memonitor dan menjelaskan perubahan tren pada opini, sikap, dan perilaku masyarakat. Karena data diambil secara acak dari populasi, maka dapat dilakukan inferensi namun tidak dapat untuk menyatakan causation(sebab-akibat)
 
 ```{r}
 library(dplyr)
@@ -19,6 +22,7 @@ data <- data.frame(gss)
 **Pertanyaan 1** Apakah ada perbedaan proporsi untuk dua status pernikahan (`marital`) (Married dan Divorced) berdasarkan dua kelompok jenis pekerjaan (`wrkstat`) (Fulltime dan Parttime)
 H0: Tidak ada perbedaan proporsi.
 Ha: Terdapat perbedaan proporsi.
+Alasan: kami ingin mengetahui apakah status pernikahan mempengaruhi status pekerjaan seseorang. Karena ada anggapan dimana seseorang yang sudah bercerai akan lebih giat bekerja entah untuk memenuhi kebutuhan sehari-harinya ataupun hanya untuk mengisi waktu senggang.
 
 ##### Filter dataset berdasarkan `wrkstat` untuk "Working Fulltime" dan "Working Parttime", dan `marital` untuk "Married" dan "Divorced", lalu kelompokkan 
 ```{r}
@@ -35,6 +39,7 @@ marital_wrkstat
 ```{r}
 ggplot(marital_wrkstat, aes(x=factor(wrkstat), y=jumlah, fill=factor(marital)))+
   geom_col(position="fill")
+
 ```
 Dari boxplot yang dibuat, terlihat ada perbedaan dimana proporsi bercerai untuk Fulltime lebih tinggi dibanding Parttime.
 
@@ -49,6 +54,7 @@ Dari dari hasil prop test, didapatkan nilai p-value yang lebih kecil dari 0.05, 
 H0: Tidak ada hubungan antara keduanya
 Ha: Terdapat hubungan antara keduanya
 
+Alasan: Kelompok kami ingin mencari tahu apakah semakin tinggi pendidikan seseorang semakin sedikit pula jumlah anaknya atau sebaliknya? Karena menurut pandangan masyarakat,orang yang terpelajar justru akan memiliki anak dengan jumlah yang sedikit karena alasan sibuk bekerja ataupun orang tersebut memikirkan kesejahteraan anaknya. Sehingga jika anak yang ia miliki jumlahnya diluar kemampuannya ia takut tidak dapat menghidupi anaknya dengan kehidupan yang layak.
 ##### Buat dataframe mengelompokan berdasarkan `degree` dan `childs` dan hitung jumlah masing-masing
 ```{r}
 degree_childs <- data %>%
@@ -77,6 +83,8 @@ Dari hasil uji chi square, diperoleh nilai p-value = 2.2e-16. Karena p-value leb
 **Pertanyaan 3** Apakah ada hubungan antara ras (`race`) dan jumlah pendapatan (`income06`)
 H0: Terdapat hubungan antara ras dan pendapatan
 Ha: Tidak terdapat hubungan antara ras dan pendapatan
+
+Alasan: Karena survey ini dilakukan di Amerika,dimana kerap kali kita mendengar berita tentang rasismen.Kelompok kami ingin tahu apakah ras seseorang mempengaruhi penghasilan yang dimiliki atau tidak sama sekali?
 
 ##### Kelompokan data berdasarkan `race` dan `income06` dan hitung jumlah masing-masing kelompok
 ```{r}
